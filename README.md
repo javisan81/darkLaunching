@@ -1,7 +1,7 @@
 The goal of this practice is to introduce a new Vat for the products starting next month.
 The new table is:
-    "charity" : 5%,
-    "bread": 10%
+*     "charity" : 5%
+*     "bread": 10%
 
 The problem is that the government want to check calling the "calculate" method that this is working before that
 day in production.
