@@ -1,7 +1,11 @@
 The goal of this practice is to introduce a new Vat for the products starting next month.
-The problem is that the goverment want to check calling the "calculate" method that this is working before that
+The new table is:
+    "charity" : 5%,
+    "bread": 10%
+
+The problem is that the government want to check calling the "calculate" method that this is working before that
 day in production.
-So we have to give them a way to obtain that info without affecting users
+So we have to give them a way to obtain that info without affecting users.
 
 Rules:
 - VatTest needs to run all the time
