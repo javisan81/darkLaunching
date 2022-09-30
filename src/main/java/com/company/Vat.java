@@ -16,34 +16,6 @@ public class Vat {
     private final ToggleRepository toggleRepository;
     private final GovermentMessageRepository governmentMessageRepository;
 
-    public Vat(){
-        this(new ToggleRepository() {
-            @Override
-            public boolean isNewVatToggleOn() {
-                return false;
-            }
-        });
-    }
-
-    public Vat(ToggleRepository toggleRepository) {
-        this(toggleRepository, new GovermentMessageRepository() {
-            @Override
-            public void sendToGoverment(String product, BigDecimal vatCalculated) {
-
-            }
-
-            @Override
-            public String getProduct() {
-                return null;
-            }
-
-            @Override
-            public BigDecimal getVatCalculated() {
-                return null;
-            }
-        });
-    }
-
     public Vat(ToggleRepository toggleRepository, GovermentMessageRepository governmentMessageRepository) {
         this.toggleRepository=toggleRepository;
         this.governmentMessageRepository=governmentMessageRepository;

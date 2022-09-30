@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import static org.junit.Assert.assertEquals;
 
 public class VatTest {
-    GovermentMessageRepository governmentMessageRepository = new GovermentMessageRepository() {
+    private final GovermentMessageRepository inMemoryGovernmentRepository = new GovermentMessageRepository() {
         public BigDecimal vatCalculated;
         public String product;
         @Override
@@ -26,49 +26,47 @@ public class VatTest {
             return vatCalculated;
         }
     };
+    private final GovermentMessageRepository nullGovernmentRepository = new GovermentMessageRepository() {
+        @Override
+        public void sendToGoverment(String product, BigDecimal vatCalculated) {
+
+        }
+
+        @Override
+        public String getProduct() {
+            return null;
+        }
+
+        @Override
+        public BigDecimal getVatCalculated() {
+            return null;
+        }
+    };
 
     @Test
     public void forCharity(){
-        Vat vat = new Vat();
+        Vat vat = new Vat(() -> false, nullGovernmentRepository);
         assertEquals(BigDecimal.ZERO, vat.calculate("charity"));
         assertEquals(BigDecimal.ZERO, vat.calculate("charity"));
-
     }
 
     @Test
     public void forBread(){
-        ToggleRepository toggleRepository= new ToggleRepository() {
-            @Override
-            public boolean isNewVatToggleOn() {
-                return false;
-            }
-        };
-        Vat vat = new Vat(toggleRepository, governmentMessageRepository);
+        Vat vat = new Vat(() -> false, inMemoryGovernmentRepository);
         assertEquals(BigDecimal.valueOf(4), vat.calculate("bread"));
-        assertEquals(BigDecimal.valueOf(10), governmentMessageRepository.getVatCalculated());
-        assertEquals("bread", governmentMessageRepository.getProduct());
+        assertEquals(BigDecimal.valueOf(10), inMemoryGovernmentRepository.getVatCalculated());
+        assertEquals("bread", inMemoryGovernmentRepository.getProduct());
     }
     @Test
     public void newVatForCharity(){
-        ToggleRepository toggleRepository= new ToggleRepository() {
-            @Override
-            public boolean isNewVatToggleOn() {
-                return true;
-            }
-        };
-        Vat vat = new Vat(toggleRepository, governmentMessageRepository);
+        ToggleRepository toggleRepository= () -> true;
+        Vat vat = new Vat(toggleRepository, inMemoryGovernmentRepository);
         assertEquals(BigDecimal.valueOf(5), vat.calculate("charity"));
     }
 
     @Test
     public void newVatForBread(){
-        ToggleRepository toggleRepository= new ToggleRepository() {
-            @Override
-            public boolean isNewVatToggleOn() {
-                return true;
-            }
-        };
-        Vat vat = new Vat(toggleRepository);
+        Vat vat = new Vat(() -> true, nullGovernmentRepository);
         assertEquals(BigDecimal.valueOf(10), vat.calculate("bread"));
     }
 }
