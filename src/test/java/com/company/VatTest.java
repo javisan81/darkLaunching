@@ -7,11 +7,11 @@ import java.math.BigDecimal;
 import static org.junit.Assert.assertEquals;
 
 public class VatTest {
-    private static BigDecimal vatCalculated;
-    private static String product;
+    private static BigDecimal vatCalculatedForGovernment;
+    private static String productForGovernment;
     private final GovermentMessageRepository inMemoryGovernmentRepository = (product, vatCalculated) -> {
-        VatTest.vatCalculated = vatCalculated;
-        VatTest.product = product;
+        VatTest.vatCalculatedForGovernment = vatCalculated;
+        VatTest.productForGovernment = product;
     };
     private final GovermentMessageRepository nullGovernmentRepository = (product, vatCalculated) -> {};
 
@@ -26,8 +26,8 @@ public class VatTest {
     public void forBread() {
         Vat vat = new Vat(() -> false, inMemoryGovernmentRepository);
         assertEquals(BigDecimal.valueOf(4), vat.calculate("bread"));
-        assertEquals(BigDecimal.valueOf(10), vatCalculated);
-        assertEquals("bread", product);
+        assertEquals(BigDecimal.valueOf(10), vatCalculatedForGovernment);
+        assertEquals("bread", productForGovernment);
     }
 
     @Test
